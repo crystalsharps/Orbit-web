@@ -1,0 +1,1039 @@
+<!doctype html>
+<html>
+<!-- Copyright 2018-2022 Kiwi Browser -->
+<head>
+  <title>New Tab</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#061310">
+  <style>
+html {
+    height: 100%
+}
+
+body {
+    background-attachment: fixed !important;
+    position: initial!important;
+    cursor: default;
+    font-family: arial, sans-serif;
+    font-size: small;
+    margin: 0;
+    min-height: 100%;
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+    background: linear-gradient(180deg, #04110d 0%, #071a17 30%, #020b09 100%);
+}
+
+#ntp-contents {
+    height: 100%;
+    position: relative;
+    z-index: 1;
+    width: 98%
+}
+
+#logo, #fakebox-container {
+    flex-shrink: 0
+}
+
+a:-webkit-any-link {
+    text-decoration: none !important
+}
+
+a:link {
+    text-decoration: none !important
+}
+
+#attribution {
+    bottom: 0;
+    color: var(--text-color-light);
+    cursor: default;
+    display: inline-block;
+    font-size: 13px;
+    left: auto;
+    position: fixed;
+    right: 8px;
+    text-align: left;
+    user-select: none;
+    z-index: -1
+}
+
+#bookmarks-grid, #fake-bookmarks-grid, #ideas-grid {
+    margin: 2%;
+    margin-top: 0px;
+    position: relative
+}
+
+@media (max-width: 450px) {
+    #bookmarks-grid, #fake-bookmarks-grid, #ideas-grid {
+        min-height: 208px
+    }
+}
+
+@media (min-width: 450px) {
+    #bookmarks-grid, #fake-bookmarks-grid, #ideas-grid {
+        min-height: 104px
+    }
+}
+
+#fake-bookmarks-grid {
+    z-index: -99999
+}
+
+.grid-item {
+    float: left;
+    width: 64px;
+    font-size: 10px;
+    overflow: hidden;
+    background: rgba(10, 24, 22, 0.92);
+    border: 1px solid rgba(85, 240, 174, 0.2);
+    border-radius: 12px;
+    margin: 10px;
+    color: #dffef8;
+    text-align: center;
+    z-index: 999999
+}
+
+.grid-item a {
+    text-decoration: none;
+    color: #dffef8
+}
+
+.grid-image {
+    height: 64px;
+    width: 64px;
+    object-fit: contain
+}
+
+#explore-section {
+    padding-bottom: 20px
+}
+
+.plus-item a {
+    text-decoration: none
+}
+
+.plus-item {
+    line-height: 30px;
+    color: #dffef8;
+    font-size: 25px;
+    text-align: center;
+    z-index: 999999;
+    color: #dffef8
+}
+
+.configure-item a, .configure-item-explore a {
+    text-decoration: none
+}
+
+.configure-item, .configure-item-explore {
+    font-size: 21px;
+    font-weight: 450;
+    z-index: 999999;
+    color: #dffef8;
+    float: left;
+    padding-left: 12px
+}
+
+.close-item a {
+    text-decoration: none;
+    z-index: 9999999
+}
+
+.close-item {
+    font-size: 21px;
+    font-weight: 450;
+    z-index: 99999999;
+    color: #dffef8;
+    position: absolute;
+    right: 10px
+}
+
+.newsImage {
+    width: 128px;
+    height: 128px;
+    object-fit: cover;
+    z-index: 9999999;
+    border-radius: 6px
+}
+
+.newsItem {
+    margin: 5px;
+    border-radius: 5px;
+    border-bottom: 1px solid rgba(85, 240, 174, 0.2);
+    padding-bottom: 15px !important;
+    font-family: Roboto,RobotoDraft,Helvetica,Arial,sans-serif;
+    margin-top: 15px;
+    background: rgba(6, 19, 16, 0.8)
+}
+
+.newsItem a {
+    text-decoration: none
+}
+
+.newsTitle {
+    color: #ebfff6;
+    padding-right: 148px;
+    padding-top: 5px
+}
+
+.newsAttribution, .newsTime {
+    color: rgba(223, 254, 248, 0.8);
+    font-size: 70%
+}
+
+.newsTime {
+    position: relative;
+    top: 10px
+}
+
+#locale, #explore-title {
+    font-size: 12px;
+    position: relative;
+    top: -2px;
+    padding-right: 6px
+}
+
+.arrow-down {
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid #ccc;
+    position: relative;
+    top: 7px
+}
+
+.show {
+    display: block !important
+}
+
+.dropbtn {
+    cursor: pointer
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: rgba(15, 30, 28, 0.96);
+    min-width: 160px;
+    overflow: auto;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    margin-top: 15px;
+    margin-left: 11px;
+    height: 300px
+}
+
+.dropdown-content a {
+    color: #ebfff6;
+    padding: 3px 1px;
+    text-decoration: none;
+    display: block;
+    font-size: 14px
+}
+
+.dropdown a:hover {
+    background-color: rgba(85, 240, 174, 0.18)
+}
+
+.localesList {
+    line-height: 28px
+}
+
+.localesListUnselected {
+    list-style-type: circle
+}
+</style>
+  <meta charset="utf-8">
+  <meta name="google" value="notranslate">
+  <script>
+  if (window.chrome.embeddedSearch.newTabPage.isIncognito) document.getElementsByTagName('html')[0].style.backgroundColor='black';
+  </script>
+</head>
+<!-- Remember to update the test HTML files in chrome/test/data/local_ntp/
+   whenever making changes to this file.-->
+<body>
+<script>
+if (window.chrome.embeddedSearch.newTabPage.isIncognito) document.body.style.backgroundColor='black';
+</script>
+<style>
+.newsImage {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.ntpOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 9999999999;
+  background-color: rgba(255,255,255,1);
+}
+.centeredBlock {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 90%;
+  height: 70%;
+  background-color: #efefef;
+  border-radius: 26px;
+  text-align: center;
+  -webkit-box-shadow: 6px 23px 26px -17px rgba(219,219,219,1);
+  -moz-box-shadow: 6px 23px 26px -17px rgba(219,219,219,1);
+  box-shadow: 6px 23px 26px -17px rgba(219,219,219,1);
+  padding-top: 40px;
+}
+</style>
+<script>
+function replaceInnerHTML(oldDiv, html) {
+    var newDiv = oldDiv.cloneNode(false);
+    newDiv.innerHTML = html;
+    oldDiv.parentNode.replaceChild(newDiv, oldDiv);
+};
+
+function preconnectTo(url) {
+  if (url.includes("facebook"))
+    return ;
+  var hint = document.createElement("link");
+  hint.rel = "preconnect";
+  hint.href = url;
+  document.head.appendChild(hint);
+}
+
+function changeThemeColor(targetColor) {
+    var metaThemeColor = document.querySelector("meta[name=theme-color]");
+    metaThemeColor.setAttribute("content", targetColor);
+    document.getElementById('ntpOverlay').style.backgroundColor = targetColor;
+}
+
+function goToPage2()
+{
+    document.getElementById('ntpSlide1').style.display='none';
+    document.getElementById('ntpSlide2').style.display='block';
+    document.getElementById('centeredBlock').style.backgroundColor='#282828';
+    changeThemeColor('#000');
+}
+
+var locales = {};
+locales['English | Australia'] = '?hl=en-AU&gl=AU&ceid=AU:en';
+locales['English | Botswana'] = '?hl=en-BW&gl=BW&ceid=BW:en';
+locales['English | Canada'] = '?hl=en-CA&gl=CA&ceid=CA:en';
+locales['English | Ethiopia'] = '?hl=en-ET&gl=ET&ceid=ET:en';
+locales['English | Ghana'] = '?hl=en-GH&gl=GH&ceid=GH:en';
+locales['English | India'] = '?hl=en-IN&gl=IN&ceid=IN:en';
+locales['English | Indonesia'] = '?hl=en-ID&gl=ID&ceid=ID:en';
+locales['English | Ireland'] = '?hl=en-IE&gl=IE&ceid=IE:en';
+locales['English | Israel'] = '?hl=en-IL&gl=IL&ceid=IL:en';
+locales['English | Kenya'] = '?hl=en-KE&gl=KE&ceid=KE:en';
+locales['English | Latvia'] = '?hl=en-LV&gl=LV&ceid=LV:en';
+locales['English | Malaysia'] = '?hl=en-MY&gl=MY&ceid=MY:en';
+locales['English | Namibia'] = '?hl=en-NA&gl=NA&ceid=NA:en';
+locales['English | New Zealand'] = '?hl=en-NZ&gl=NZ&ceid=NZ:en';
+locales['English | Nigeria'] = '?hl=en-NG&gl=NG&ceid=NG:en';
+locales['English | Pakistan'] = '?hl=en-PK&gl=PK&ceid=PK:en';
+locales['English | Philippines'] = '?hl=en-PH&gl=PH&ceid=PH:en';
+locales['English | Singapore'] = '?hl=en-SG&gl=SG&ceid=SG:en';
+locales['English | South Africa'] = '?hl=en-ZA&gl=ZA&ceid=ZA:en';
+locales['English | Tanzania'] = '?hl=en-TZ&gl=TZ&ceid=TZ:en';
+locales['English | Uganda'] = '?hl=en-UG&gl=UG&ceid=UG:en';
+locales['English | United Kingdom'] = '?hl=en-GB&gl=GB&ceid=GB:en';
+locales['English | United States'] = '?hl=en-US&gl=US&ceid=US:en';
+locales['English | Zimbabwe'] = '?hl=en-ZW&gl=ZW&ceid=ZW:en';
+locales['Bahasa Indonesia | Indonesia'] = '?hl=id&gl=ID&ceid=ID%3Aid';
+locales['Čeština | Česko'] = '?hl=cs&gl=CZ&ceid=CZ%3Acs';
+locales['Deutsch | Deutschland'] = '?hl=de&gl=DE&ceid=DE%3Ade';
+locales['Deutsch | Österreich'] = '?hl=de&gl=AT&ceid=AT%3Ade';
+locales['Deutsch | Schweiz'] = '?hl=de&gl=CH&ceid=CH%3Ade';
+locales['Español | Argentina'] = '?hl=es-419&gl=AR&ceid=AR%3Aes-419';
+locales['Español | Chile'] = '?hl=es-419&gl=CL&ceid=CL%3Aes-419';
+locales['Español | Colombia'] = '?hl=es-419&gl=CO&ceid=CO%3Aes-419';
+locales['Español | Cuba'] = '?hl=es-419&gl=CU&ceid=CU%3Aes-419';
+locales['Español | Estados Unidos'] = '?hl=es-419&gl=US&ceid=US%3Aes-419';
+locales['Español | México'] = '?hl=es-419&gl=MX&ceid=MX%3Aes-419';
+locales['Español | Perú'] = '?hl=es-419&gl=PE&ceid=PE%3Aes-419';
+locales['Español | Venezuela'] = '?hl=es-419&gl=VE&ceid=VE%3Aes-419';
+locales['Français | Belgique'] = '?hl=fr&gl=BE&ceid=BE%3Afr';
+locales['Français | Canada'] = '?hl=fr-CA&gl=CA&ceid=CA:fr';
+locales['Français | France'] = '?hl=fr&gl=FR&ceid=FR%3Afr';
+locales['Français | Maroc'] = '?hl=fr&gl=MA&ceid=MA%3Afr';
+locales['Français | Sénégal'] = '?hl=fr&gl=SN&ceid=SN%3Afr';
+locales['Français | Suisse'] = '?hl=fr&gl=CH&ceid=CH%3Afr';
+locales['Italiano | Italia'] = '?hl=it&gl=IT&ceid=IT%3Ait';
+locales['Latviešu | Latvija'] = '?hl=lv&gl=LV&ceid=LV%3Alv';
+locales['Lietuvių | Lietuva'] = '?hl=lt&gl=LT&ceid=LT%3Alt';
+locales['Magyar | Magyarország'] = '?hl=hu&gl=HU&ceid=HU%3Ahu';
+locales['Nederlands | België'] = '?hl=nl&gl=BE&ceid=BE%3Anl';
+locales['Nederlands | Nederland'] = '?hl=nl&gl=NL&ceid=NL%3Anl';
+locales['Norsk | Norge'] = '?hl=no&gl=NO&ceid=NO%3Ano';
+locales['Polski | Polska'] = '?hl=pl&gl=PL&ceid=PL%3Apl';
+locales['Português | Brasil'] = '?hl=pt-BR&gl=BR&ceid=BR%3Apt-419';
+locales['Português | Portugal'] = '?hl=pt-PT&gl=PT&ceid=PT%3Apt-150';
+locales['Română | România'] = '?hl=ro&gl=RO&ceid=RO%3Aro';
+locales['Slovenčina | Slovensko'] = '?hl=sk&gl=SK&ceid=SK%3Ask';
+locales['Slovenščina | Slovenija'] = '?hl=sl&gl=SI&ceid=SI%3Asl';
+locales['Svenska | Sverige'] = '?hl=sv&gl=SE&ceid=SE%3Asv';
+locales['Tiếng Việt | Việt Nam'] = '?hl=vi&gl=VN&ceid=VN%3Avi';
+locales['Türkçe | Türkiye'] = '?hl=tr&gl=TR&ceid=TR%3Atr';
+locales['Ελληνικά | Ελλάδα'] = '?hl=el&gl=GR&ceid=GR%3Ael';
+locales['Български | България'] = '?hl=bg&gl=BG&ceid=BG%3Abg';
+locales['Русский | Россия'] = '?hl=ru&gl=RU&ceid=RU%3Aru';
+locales['Русский | Украина'] = '?hl=ru&gl=UA&ceid=UA%3Aru';
+locales['Српски | Србија'] = '?hl=sr&gl=RS&ceid=RS%3Asr';
+locales['Українська | Україна'] = '?hl=uk&gl=UA&ceid=UA%3Auk';
+locales['עברית | ישראל'] = '?hl=he&gl=IL&ceid=IL%3Ahe';
+locales['العربية | الإمارات العربية المتحدة'] = '?hl=ar&gl=AE&ceid=AE%3Aar';
+locales['العربية | المملكة العربية السعودية'] = '?hl=ar&gl=SA&ceid=SA%3Aar';
+locales['العربية | لبنان'] = '?hl=ar&gl=LB&ceid=LB%3Aar';
+locales['العربية | مصر'] = '?hl=ar&gl=EG&ceid=EG%3Aar';
+locales['मराठी | भारत'] = '?hl=mr&gl=IN&ceid=IN%3Amr';
+locales['हिन्दी | भारत'] = '?hl=hi&gl=IN&ceid=IN%3Ahi';
+locales['বাংলা | বাংলাদেশ'] = '?hl=bn&gl=BD&ceid=BD%3Abn';
+locales['தமிழ் | இந்தியா'] = '?hl=ta&gl=IN&ceid=IN%3Ata';
+locales['മലയാളം | ഇന്ത്യ'] = '?hl=ml&gl=IN&ceid=IN%3Aml';
+locales['తెలుగు | భారతదేశం'] = '?hl=te&gl=IN&ceid=IN%3Ate';
+locales['ไทย | ไทย'] = '?hl=th&gl=TH&ceid=TH%3Ath';
+locales['中文 | 中国'] = '?hl=zh-CN&gl=CN&ceid=CN:zh-Hans';
+locales['中文 | 台灣'] = '?hl=zh-TW&gl=TW&ceid=TW%3Azh-Hant';
+locales['中文 | 香港'] = '?hl=zh-HK&gl=HK&ceid=HK%3Azh-Hant';
+locales['日本語 | 日本'] = '?hl=ja&gl=JP&ceid=JP%3Aja';
+locales['한국어 | 대한민국'] = '?hl=ko&gl=KR&ceid=KR%3Ako';
+
+function locale_to_readabletext(string)
+{
+  string = string.replace('%3A', ':');
+  for (var locale in locales)
+  {
+      if (locales[locale].replace('%3A', ':') == string)
+          return locale;
+  }
+  return null;
+}
+
+</script>
+
+  <div id="one-google" class="hidden" style="display: none;"></div>
+
+  <div id="terminal-statusbar" class="terminal-statusbar">
+    <div class="terminal-brand">KIWI // NTP</div>
+    <div class="terminal-metrics">
+      <span class="status-pill">ONLINE</span>
+      <span class="status-pill" id="status-clock">--:--</span>
+      <span class="status-pill" id="status-locale">SYSTEM</span>
+    </div>
+  </div>
+
+  <div id="quick-actions" class="quick-actions">
+    <button class="quick-action" type="button">HOME</button>
+    <button class="quick-action" type="button">BOOKMARKS</button>
+    <button class="quick-action" type="button">SEARCH</button>
+    <button class="quick-action" type="button">TOOLS</button>
+  </div>
+
+  <div id="system-panel" class="system-panel" aria-live="polite">
+    <div class="panel-card">
+      <span class="label">STATUS</span>
+      <strong id="status-text">BROWSER READY</strong>
+    </div>
+    <div class="panel-card">
+      <span class="label">TIME</span>
+      <strong id="clock-text">--:--</strong>
+    </div>
+    <div class="panel-card">
+      <span class="label">PROFILE</span>
+      <strong>DEFAULT</strong>
+    </div>
+  </div>
+
+  <div id="ntp-contents">
+    <div id="logo" style="display: none;">
+      <div id="logo-default" title="Google"></div>
+      <div id="logo-non-white" title="Google"></div>
+      <div id="logo-doodle">
+        <button id="logo-doodle-button">
+          <img id="logo-doodle-image"></img>
+        </button>
+        <iframe id="logo-doodle-iframe" scrolling="no"></iframe>
+        <button id="logo-doodle-notifier">
+          <div class="outer ball0"><div class="inner"></div></div>
+          <div class="outer ball1"><div class="inner"></div></div>
+          <div class="outer ball2"><div class="inner"></div></div>
+          <div class="outer ball3"><div class="inner"></div></div>
+        </button>
+      </div>
+    </div>
+
+    <div id="fakebox-container" style="display: none;">
+      <div id="fakebox">
+        <div id="fakebox-text"></div>
+        <input id="fakebox-input" autocomplete="off" tabindex="-1" type="url"
+            aria-hidden="true">
+        <div id="fakebox-cursor"></div>
+        <button id="fakebox-microphone" hidden></button>
+      </div>
+    </div>
+
+<style>
+.full-hidden {
+  opacity: 0 !important;
+  position: absolute !important;
+  top: -9999999px;
+  left: -9999999px;
+  z-index: -99999;
+  width: 100vw !important;
+}
+
+.closeImgInvisible {
+  display: none;
+}
+</style>
+    <div style="position: absolute; top: 0px; right: 5px; z-index: 99999999">
+    <div class="plus-item" role="button" aria-label="Add new tile" title="Add new tile" id="add-button">+</div>
+    </div>
+    <div id="fake-bookmarks-grid" style="display: none">
+    </div>
+    <div id="bookmarks-grid" class="full-hidden">
+    </div>
+<span id="explore-section" style="display: none">
+<div style="clear: both;"></div>
+<div class="configure-item-explore">
+<span id="explore-title">Explore</span>
+</div>
+<div class="close-item" role="button" aria-label="Close explore" title="Close explore" id="close-explore-button">x</div>
+<div style="clear: both;"></div>
+    <div id="ideas-grid">
+    </div>
+<div style="clear: both; height: 1px;"></div>
+</span>
+<div id="incognito" style="display: none;width: 100%;height: 100%;background:black;">
+<div style="text-align: center;padding-top:50px;">
+<img style="width: 64px;border-radius: 50%"
+        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAbAAAAGwCAYAAADITjAqAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAGJCSURBVHgB7b0NmF1Vmef7rl2BRKtCmEaTVJAk5AM/RiCh[...]
+<br />
+  <span style="color: rgb(182, 182, 182);">
+<h2>Private mode</h2>
+  </span>
+</div>
+</div>
+<script>
+var news_are_already_onscreen = false;
+var instant_grid_done = false;
+function instant_grid()
+{
+  instant_grid_done = true;
+  if (typeof localStorage.cachedGrid != "undefined") {
+      replaceInnerHTML(document.getElementById('fake-bookmarks-grid'), localStorage.cachedGrid);
+      document.getElementById('fake-bookmarks-grid').style.cssText = localStorage.cachedGridStyle;
+      document.getElementById('fake-bookmarks-grid').style.display = 'block';
+  }
+}
+
+if (window.chrome.embeddedSearch.newTabPage.isIncognito)
+{
+  document.body.style.backgroundColor='black';
+  document.getElementById('incognito').style.display='block';
+}
+else
+{
+try {
+  instant_grid();
+  window.setTimeout(function () { if (!instant_grid_done) instant_grid(); }, 1);
+}
+catch (err) {
+  console.log("Instant init failed, retrying later");
+}
+}
+</script>
+<style>
+@-webkit-keyframes shadow-inset-center {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 14px 0px rgba(0, 0, 0, 0.5);
+  }
+}
+@keyframes shadow-inset-center {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 14px 0px rgba(0, 0, 0, 0.5);
+  }
+}
+</style>
+<script>
+function timeago(a) {
+    var result = timeago_format(a);
+    if (result[0] > 1)
+      return result[0] + " " + result[1] + "s ago";
+    return result[0] + " " + result[1] + " ago";
+}
+
+function timeago_format(a) {
+    var b = Math.floor((new Date() - (a * 1000)) / 1000);
+    var c = b / 31536000;
+    if (c > 1) {
+        return [Math.abs(Math.floor(c)), "year"]
+    }
+    c = b / 2592000;
+    if (c > 1) {
+        return [Math.abs(Math.floor(c)), "month"]
+    }
+    c = b / 86400;
+    if (c > 1) {
+        return [Math.abs(Math.floor(c)), "day"]
+    }
+    c = b / 3600;
+    if (c > 1) {
+        return [Math.abs(Math.floor(c)), "hour"]
+    }
+    c = b / 60;
+    if (c > 1) {
+        return [Math.abs(Math.floor(c)), "minute"]
+    }
+    return [Math.abs(Math.floor(b)), "second"]
+}
+
+var must_clear_news = false;
+function render_news_loading()
+{
+  must_clear_news = true;
+  document.getElementById('news').innerHTML = '<div style="clear:both;text-align:center;width: 100%"><br />&nbsp;<br /><div class="lds-dual-ring"></div></div>';
+}
+
+function add_gnews(is_primary, title, news_time, source, source_logo, link, image)
+{
+  var innerDiv = document.createElement('div');
+  if (!image)
+    image = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+  var creationTime = news_time;
+  var timeagoInstance = timeago();
+  innerDiv.className = 'newsItem';
+  innerDiv.innerHTML = '<div style="float: right; height: 128px;"><img src="' + image + '" class="newsImage" onload="this.style.opacity=\'1\';this.style.visibility=\'visible\'" onerror="this.style.display=\'none\'" /></div>'
+  + '<div style="position: relative; left: 10px; font-size: medium">'
+  + '<span class="newsAttribution"><img src="' + source_logo + '" onerror="this.style.display=\'none\'" style="max-height: 12px;" />&nbsp;&nbsp;<a style="color: #333" href="' + link + '">' + source + '</a></span>'
+  + '<div class="newsTitle"><a style="color: #333" href="' + link + '">' 
+  + title + '</a></div>'
+  + '<span class="newsTime">'
+  + timeago(creationTime) + '</span></a></div>';
+  document.getElementById('news').appendChild(innerDiv);
+  var spacer = document.createElement('div');
+  spacer.style.clear = 'both';
+  innerDiv.appendChild(spacer);
+}
+
+var has_valid_foryou_entries = false;
+var last_offset_rendered = 0;
+function render_gnews(answer, start_offset, n)
+{
+  last_offset_rendered = start_offset + n;
+  if (must_clear_news)
+  {
+      must_clear_news = false;
+      document.getElementById('news').innerHTML = '';
+  }
+          var el = document.createElement('div');
+          el.style.display = 'none';
+          el.baseURI = 'https://news.google.com/';
+          simplifiedAnswer = '<article' + answer.split('<article').slice(1).join('<article').split('<\/script>')[0];
+          simplifiedAnswer = simplifiedAnswer.replace(new RegExp('<img', 'gi'), '<source');
+          simplifiedAnswer = simplifiedAnswer.replace(/ (aria-.*?|js.*?|srcset|d|data-.*?|focusable|fill|ve-.*?|alt|tabindex|role|loading)="[^"]*"/g,'')
+          el.innerHTML = simplifiedAnswer;
+          localStorage.cachedGNews = simplifiedAnswer;
+          var articles = el.getElementsByTagName('article');
+          var added = start_offset;
+          for (var i = start_offset; i < articles.length && added < (n + start_offset); i++) {
+              var article = articles[i];
+              var children = article.childNodes;
+              var title = null;
+              var link = null;
+              var image = null;
+              var source = null;
+              var source_logo = null;
+              var is_primary = false;
+              var news_time = null;
+              for (var j = 0; j < children.length; j++) {
+                  var child = children[j];
+                  if (child.tagName == 'A')
+                  {
+                      link = child.href;
+                  }
+                  else if (child.tagName == 'FIGURE')
+                  {
+                      if (child.childNodes.length >= 2 && child.childNodes[0].tagName == 'SOURCE')
+                      {
+                          image = child.childNodes[0].src;
+                          is_primary = true;
+                      }
+                      else if (child.childNodes.length >= 2 && child.childNodes[1].tagName == 'SOURCE')
+                      {
+                          image = child.childNodes[1].src;
+                          is_primary = true;
+                      }
+                      else if (child.childNodes.length == 1 && child.childNodes[0].tagName == 'SOURCE')
+                      {
+                          image = child.childNodes[0].src;
+                      }
+                  }
+                  else if (child.tagName == 'H3')
+                  {
+                      title = child.childNodes[0].innerText;
+                  }
+                  else if (child.tagName == 'DIV')
+                  {
+                      if (child.childNodes.length >= 2 && child.childNodes[0].tagName == 'DIV' && child.childNodes[1].tagName == 'MENU')
+                      {
+                          if (child.childNodes[0].childNodes[0].tagName == 'TIME')
+                              news_time = child.childNodes[0].childNodes[0].dateTime;
+                          else if (child.childNodes[0].childNodes[1].tagName == 'TIME')
+                              news_time = child.childNodes[0].childNodes[1].dateTime;
+                          if (child.childNodes[0].childNodes.length == 3 && child.childNodes[0].childNodes[2].tagName == 'TIME')
+                              news_time = child.childNodes[0].childNodes[2].dateTime;
+                      }
+                      else if (child.childNodes.length >= 2 && child.childNodes[0].tagName == 'DIV')
+                      {
+                          var subNode = child.childNodes[1];
+                          if (subNode.childNodes[0].tagName == 'DIV' && subNode.childNodes[1].tagName == 'MENU')
+                          {
+                              if (subNode.childNodes[0].childNodes[0].tagName == 'TIME')
+                                  news_time = subNode.childNodes[0].childNodes[0].dateTime;
+                              else if (subNode.childNodes[0].childNodes[1].tagName == 'TIME')
+                                  news_time = subNode.childNodes[0].childNodes[1].dateTime;
+                          }
+                          var subNode = child.childNodes[0].childNodes[0];
+                          if (subNode.childNodes.length == 3 && subNode.childNodes[0].tagName == 'DIV')
+                          {
+                              source = subNode.childNodes[0].innerText;
+                              var sourceNode = subNode.childNodes[0].childNodes[0];
+                              if ((sourceNode.tagName == 'A' || sourceNode.tagName == 'SPAN') && sourceNode.childNodes[0].tagName == 'SOURCE')
+                                  source_logo = sourceNode.childNodes[0].src;
+                          }
+                          if (subNode.childNodes.length == 3 && subNode.childNodes[1].tagName == 'H4')
+                              title = subNode.childNodes[1].innerText;
+                      }
+                      else if (child.childNodes.length >= 2 && child.childNodes[0].tagName == 'FIGURE')
+                      {
+                          if (child.childNodes[0].childNodes[0].tagName == 'SOURCE')
+                              image = child.childNodes[0].childNodes[0].src;
+                          else if (child.childNodes[0].childNodes[1].tagName == 'SOURCE')
+                              image = child.childNodes[0].childNodes[1].src;
+                          var divSubNode = child.childNodes[1];
+                          if (divSubNode.childNodes.length == 3 && divSubNode.childNodes[0].tagName == 'DIV')
+                          {
+                              source = divSubNode.childNodes[0].innerText;
+                              var sourceNode = divSubNode.childNodes[0].childNodes[0];
+                              if ((sourceNode.tagName == 'A' || sourceNode.tagName == 'SPAN') && sourceNode.childNodes[0].tagName == 'SOURCE')
+                                  source_logo = sourceNode.childNodes[0].src;
+                          }
+                          if (divSubNode.childNodes.length == 3 && divSubNode.childNodes[1].tagName == 'H4')
+                              title = divSubNode.childNodes[1].innerText;
+                      } else if (child.childNodes.length >= 2 && child.childNodes[0].tagName == 'SOURCE') {
+                        if (child.childNodes[0].tagName == 'SOURCE' && child.childNodes[1].tagName == 'A') {
+                          source_logo = child.childNodes[0].src;
+                          if (child.childNodes[1].innerText)
+                            source = child.childNodes[1].innerText;
+                        }
+                        if (child.childNodes.length == 3) {
+                          if (child.childNodes[0].tagName == 'SOURCE' && child.childNodes[1].tagName == 'SOURCE' && child.childNodes[2].tagName == 'A') {
+                            source_logo = child.childNodes[0].src;
+                            if (child.childNodes[2].innerText)
+                              source = child.childNodes[2].innerText;
+                          }
+                        }
+                        if (child.childNodes.length == 4) {
+                          if (child.childNodes[0].tagName == 'SOURCE' && child.childNodes[1].tagName == 'SOURCE'
+                           && child.childNodes[2].tagName == 'SOURCE' && child.childNodes[3].tagName == 'A') {
+                            source_logo = child.childNodes[0].src;
+                            if (child.childNodes[3].innerText)
+                              source = child.childNodes[3].innerText;
+                          }
+                        }
+                      } else if (child.childNodes.length == 1 && child.childNodes[0].tagName == 'A')
+                      {
+                          subNode = child.childNodes[0];
+                          source = subNode.innerText;
+                          var sourceNode = subNode.childNodes[0];
+                          if (sourceNode.tagName == 'SOURCE')
+                             source_logo = sourceNode.src;
+                      }
+                      else if (child.childNodes.length >= 2 && child.childNodes[0].tagName == 'A')
+                      {
+                          source = child.childNodes[1].innerText;
+                          var sourceNode = child.childNodes[0].childNodes[0];
+                          if (sourceNode.tagName == 'SOURCE')
+                             source_logo = sourceNode.src;
+                      }
+                      else if (child.childNodes.length >= 2 && child.childNodes[0].tagName == 'SPAN')
+                      {
+                          source = child.childNodes[1].innerText;
+                          var sourceNode = child.childNodes[0].childNodes[0];
+                          if (sourceNode.tagName == 'SOURCE')
+                             source_logo = sourceNode.src;
+                        } else if (child.childNodes.length >= 2 && child.childNodes[0].tagName == 'SOURCE') {
+                          if (child.childNodes[1].innerText)
+                            source = child.childNodes[1].innerText;
+                        }
+                  }
+              }
+              try {
+                if (link == null)
+                    link = article.querySelector("a.VDXfz").href;
+              } catch {}
+              try {
+                if (title == null)
+                    title = article.querySelector("h4 a.DY5T1d").textContent;
+              } catch {}
+              try {
+                if (image == null)
+                    image = article.querySelector(".QwxBBf").src;
+              } catch {}
+              try {
+                if (source == null)
+                    source = article.querySelector("a.wEwyrc").textContent;
+              } catch {}
+              try {
+                if (source_logo == null)
+                    source_logo = article.querySelector(".wsLqz source").src;
+              } catch {}
+              try {
+                if (news_time == null || news_time == 0)
+                    news_time = article.querySelector(".WW6dff").getAttribute("datetime");
+              } catch {}
+              if (news_time && parseInt(news_time.substr(news_time.lastIndexOf(":") + 2)) > 1518000000)
+                  news_time = parseInt(news_time.substr(news_time.lastIndexOf(":") + 2));
+              else
+                  news_time = parseInt(Date.parse(news_time) / 1000);
+              if (link)
+                  link = link.replace('chrome-search://local-ntp/', 'https://news.google.com/');
+              
+              if (link && image && title) {
+                  add_gnews(is_primary, title, news_time, source, source_logo, link, image);
+                  added++;
+                  news_are_already_onscreen = true;
+                  localStorage.needFetch = false;
+              }
+          }
+          if (articles.length > (i + 1) && i <= 29)
+          {
+            document.getElementById('newsMore').innerHTML='<div style="color: #8AB4F8; font-size: 24px; width: 100%; text-align: center"><b>...</b></div><br />&nbsp;<br />';
+          } else {
+            document.getElementById('newsMore').innerHTML='';
+          }
+}
+
+var closeImg = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAA3NCSVQICAjb4U/gAAAACXBIWXMAACNvAAAjbwE1/Af7AAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAANVQTFRF////1';
+document.getElementById('add-button').addEventListener('click', create_new_item);
+
+var longpress = false;
+var presstimer = null;
+var longtarget = null;
+var iseditable = false;
+
+function load_more_news()
+{
+  localStorage.lastOffsetRendered = last_offset_rendered;
+  render_gnews(localStorage.cachedGNews, last_offset_rendered, 10);
+}
+
+function process_cancel(e) {
+    console.log('We received process_cancel');
+    console.log(e);
+    if (iseditable)
+    {
+      e.preventDefault();
+      return ;
+    }
+    if (presstimer !== null) {
+        clearTimeout(presstimer);
+        presstimer = null;
+    }
+
+    this.classList.remove("longpress");
+};
+
+function process_body_click(e) {
+  if (iseditable) {
+      toggle_edit_mode();
+      e.preventDefault();
+  }
+}
+
+function process_click(e) {
+    console.log('We received process_click');
+    console.log(e);
+    if (iseditable)
+      return ;
+    e.preventDefault();
+    if (presstimer !== null) {
+        clearTimeout(presstimer);
+        presstimer = null;
+    }
+
+    this.classList.remove("longpress");
+
+    if (longpress) {
+        return false;
+    }
+};
+
+function process_start(e) {
+    if (iseditable)
+      return ;
+
+    if (e.type === "click" && e.button !== 0) {
+        return;
+    }
+
+    longpress = false;
+
+    this.classList.add("longpress");
+
+    presstimer = setTimeout(function() {
+        toggle_edit_mode();
+        longpress = true;
+    }, 550);
+
+    return false;
+};
+
+function arrayBufferToBase64(buffer) {
+  var binary = '';
+  var bytes = [].slice.call(new Uint8Array(buffer));
+
+  bytes.forEach((b) => binary += String.fromCharCode(b));
+
+  return window.btoa(binary);
+};
+
+function invalidate_image(item)
+{
+  console.log("Invalidating item: " + item.title);
+  var parser = document.createElement('a');
+  parser.href = item.title;
+  var rootDomain = psl.get(parser.hostname);
+  console.log("Invalidating rootDomain: " + rootDomain);
+  item.src = "data:image/svg+xml;base64," + btoa(jdenticon.toSvg(parser.hostname, 64));
+  localStorage.setItem('icon-' + rootDomain, item.src);
+  localStorage.setItem('lastShown-' + rootDomain, Math.floor(Date.now() / 1000));
+}
+
+function remove_favorite(e)
+{
+  console.log("Removing favorite");
+  console.log(e);
+  item = e.target;
+  item = item.parentNode;
+  console.log("Removing item");
+  globalGrid.disconnect(item);
+}
+
+var nItemsAdded = 0;
+
+function add_favorite_idea(name, click_url, impression_url, image_url)
+{
+  var rootDomain = 'idea-' + name;
+  var innerDiv = document.createElement('div');
+  innerDiv.className = 'grid-item grid-idea';
+  var cachedImage = localStorage.getItem('icon-' + rootDomain);
+  localStorage.setItem('lastShown-' + rootDomain, Math.floor(Date.now() / 1000));
+  var imageUri = null;
+  var randomId = Math.random().toString(36).substr(2, 9) + Math.random().toString(36).substr(2, 9) + Math.random().toString(36).substr(2, 9);
+  if (cachedImage != null) {
+    imageUri = cachedImage;
+    console.log('Loading icon for ' + rootDomain + ' from cache');
+  } else {
+      console.log('Fetching icon for ' + rootDomain);
+      loadingImage = "data:image/svg+xml;base64," + btoa('<svg width="85px"  height="85px"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-tail");
+      imageUri = loadingImage;
+      try {
+      fetch(image_url).then(function(response) {
+        return response.arrayBuffer();
+      })
+      .then(function(answer) {
+        localStorage.setItem('icon-' + rootDomain, 'data:image/png;base64,' + arrayBufferToBase64(answer));
+        localStorage.setItem('lastShown-' + rootDomain, Math.floor(Date.now() / 1000));
+        document.getElementById('icon' + randomId).src = 'data:image/png;base64,' + arrayBufferToBase64(answer);
+        console.log('Icon for ' + rootDomain + ' is now fetched');
+      });
+ } catch (err) {
+      console.log('Fetch failed for: ' + err.message);
+ }
+  }
+  if (impression_url && impression_url != 'about:blank')
+    navigator.sendBeacon(impression_url);
+  innerDiv.innerHTML = '<a id="tile_target" href="' + click_url + '"><img border="0" class="grid-image" title="' + name + '" src="' + imageUri + '" id="icon' + randomId + '" onError="invalidate_image(this)"/></a>';
+  innerDiv.style.minHeight = '64px';
+  document.getElementById('ideas-grid').appendChild(innerDiv);
+}
+
+function add_favorite(item)
+{
+  var parser = document.createElement('a');
+  parser.href = item.url;
+  var rootDomain = psl.get(parser.hostname);
+  var innerDiv = document.createElement('div');
+  innerDiv.className = 'grid-item';
+  var cachedImage = localStorage.getItem('icon-' + rootDomain);
+  localStorage.setItem('lastShown-' + rootDomain, Math.floor(Date.now() / 1000));
+  var imageUri = null;
+  var randomId = Math.random().toString(36).substr(2, 9) + Math.random().toString(36).substr(2, 9) + Math.random().toString(36).substr(2, 9);
+  if (nItemsAdded++ < 10) {
+    console.log('Favorite - Preconnecting to: ' + item.url);
+    preconnectTo(item.url);
+    if (item.url.startsWith('http://'))
+      preconnectTo(item.url.replace('http://', 'https://'));
+  }
+  if (cachedImage != null) {
+    imageUri = cachedImage;
+    console.log('Loading icon for ' + rootDomain + ' from cache');
+  } else {
+      console.log('Fetching icon for ' + rootDomain);
+      loadingImage = "data:image/svg+xml;base64," + btoa('<svg width="85px"  height="85px"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid" class="lds-tail");
+      imageUri = loadingImage;
+      try {
+      fetch('https://logos.kiwibrowser.com/' + rootDomain).then(function(response) {
+        return response.arrayBuffer();
+      })
+      .then(function(answer) {
+        localStorage.setItem('icon-' + rootDomain, 'data:image/png;base64,' + arrayBufferToBase64(answer));
+        document.getElementById('icon' + randomId).src = 'data:image/png;base64,' + arrayBufferToBase64(answer);
+        console.log('Icon for ' + rootDomain + ' is now fetched');
+      });
+ } catch (err) {
+      console.log('Fetch failed for: ' + err.message);
+ }
+  }
+  innerDiv.innerHTML = '<a id="tile_target" href="' + item.url + '"><img border="0" class="grid-image" title="' + item.title + '" src="' + imageUri + '" id="icon' + randomId + '" onError="invalidate_image(this)"/></a>';
+  document.getElementById('bookmarks-grid').appendChild(innerDiv);
+}
+
+function updateStatusWidgets() {
+  var now = new Date();
+  var timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  var clockText = document.getElementById('clock-text');
+  var clockBadge = document.getElementById('status-clock');
+  if (clockText) clockText.textContent = timeString;
+  if (clockBadge) clockBadge.textContent = timeString;
+
+  var localeText = document.getElementById('status-locale');
+  if (localeText) {
+    localeText.textContent = (navigator.language || 'SYSTEM').toUpperCase();
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  updateStatusWidgets();
+  setInterval(updateStatusWidgets, 30000);
+});
+</script>
+</body>
+</html>
